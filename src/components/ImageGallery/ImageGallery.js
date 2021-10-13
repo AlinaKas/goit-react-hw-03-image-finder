@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import s from './ImageGallery.module.css';
 import imagesAPI from '../../services/imagesApi';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import Button from '../Button/Button';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 class ImageGallery extends Component {
   state = {
@@ -62,7 +65,15 @@ class ImageGallery extends Component {
       return '';
     }
     if (status === 'pending') {
-      return <p>Loading...</p>;
+      return (
+        <Loader
+          className="s.loader"
+          type="Oval"
+          color="#00BFFF"
+          height={120}
+          width={120}
+        />
+      );
     }
 
     if (status === 'rejected') {
@@ -71,20 +82,23 @@ class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <ul className={s.list}>
-          {images.map(({ id, tags, webformatURL, largeImageURL }) => {
-            return (
-              <ImageGalleryItem
-                key={id}
-                id={id}
-                alt={tags}
-                src={webformatURL}
-                // dataLargeImg={largeImageURL}
-                // openModal={openModal}
-              />
-            );
-          })}
-        </ul>
+        <>
+          <ul className={s.list}>
+            {images.map(({ id, tags, webformatURL, largeImageURL }) => {
+              return (
+                <ImageGalleryItem
+                  key={id}
+                  id={id}
+                  alt={tags}
+                  src={webformatURL}
+                  // dataLargeImg={largeImageURL}
+                  // openModal={openModal}
+                />
+              );
+            })}
+          </ul>
+          <Button loadImages={this.onLoadMore} />
+        </>
       );
     }
   }
