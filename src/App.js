@@ -2,13 +2,11 @@ import s from './App.module.css';
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import imagesAPI from './services/imagesApi';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
-import imagesAPI from './services/imagesApi';
-
-import Modal from './components/Modal';
 import Button from './components/Button';
-
+import Modal from './components/Modal';
 import LoaderSpinner from './components/Loader';
 import Container from './components/Container';
 import defaultImage from './images/default.png';
@@ -19,7 +17,6 @@ class App extends Component {
     images: [],
     page: 1,
     isLoading: false,
-    // status: 'idle',
     showModal: false,
     error: null,
     modalImage: '',
