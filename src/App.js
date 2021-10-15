@@ -11,13 +11,15 @@ import Button from './components/Button';
 
 import LoaderSpinner from './components/Loader';
 import Container from './components/Container';
+import defaultImage from './images/default.png';
 
 class App extends Component {
   state = {
     searchQuery: '',
     images: [],
     page: 1,
-    status: 'idle',
+    isLoading: false,
+    // status: 'idle',
     showModal: false,
     error: null,
     modalImage: '',
@@ -31,12 +33,13 @@ class App extends Component {
     const nextPage = this.state.page;
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
-      this.setState({ status: 'pending' });
+      // this.setState({ status: 'pending' });
+      this.setState({ isLoading: true });
 
       imagesAPI
         .fetchImages(nextSearch, nextPage)
         .then(({ hits }) => {
-          console.log({ hits });
+          // console.log({ hits });
 
           if (hits.length === 0) {
             return this.setState({
@@ -44,15 +47,14 @@ class App extends Component {
               error: `No images for your request ${nextSearch}`,
             });
           }
-
-          // console.log(hits);
           this.setState(({ images, page }) => ({
             images: [...images, ...hits],
             page: page,
             status: 'resolved',
           }));
         })
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error, status: 'rejected' }))
+        .finally(() => this.setState({ isLoading: false }));
     }
   }
 
@@ -67,6 +69,7 @@ class App extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
+
     this.scrollPage();
   };
 
@@ -96,46 +99,31 @@ class App extends Component {
   // РЕНДЕР СТРАНИЦЫ
 
   render() {
-    const { images, error, status, modalImage, alt, showModal } = this.state;
-
-    if (status === 'idle') {
-      return <Searchbar onSubmit={this.handleFormSubmit} />;
-    }
-
-    if (status === 'pending') {
-      return <LoaderSpinner />;
-    }
-
-    if (status === 'rejected') {
-      return (
-        <>
-          <Searchbar onSubmit={this.handleFormSubmit} />;
-          <p className={s.error}>{error}</p>
-        </>
-      );
-    }
-
-    if (status === 'resolved') {
-      return (
-        <Container>
-          <div className={s.App}>
-            <Searchbar onSubmit={this.handleFormSubmit} />
-            {images.length > 0 && !error && (
-              <>
-                <ImageGallery onClick={this.openModal} images={images} />
-                <Button loadImages={this.onLoadMore} />
-              </>
-            )}
-            {showModal && (
-              <Modal onClose={this.toggleModal} src={modalImage} alt={alt} />
-            )}
-            {error && <p className={s.error}>{error}</p>}
-            <ToastContainer autoClose={3000} />
-          </div>
-        </Container>
-      );
-    }
+    const { images, error, isLoading, modalImage, alt, showModal } = this.state;
+    return (
+      <Container>
+        <div className={s.App}>
+          <Searchbar onSubmit={this.handleFormSubmit} />
+          {isLoading && <LoaderSpinner />}
+          {images.length > 0 && !error && (
+            <>
+              <ImageGallery onClick={this.openModal} images={images} />
+              <Button loadImages={this.onLoadMore} />
+            </>
+          )}
+          {showModal && (
+            <Modal onClose={this.toggleModal} src={modalImage} alt={alt} />
+          )}
+          {error && <p className={s.error}>{error}</p>}
+          {error && (
+            <div>
+              <img src={defaultImage} alt={error} className={s.defaultImage} />
+            </div>
+          )}
+          <ToastContainer autoClose={3000} />
+        </div>
+      </Container>
+    );
   }
 }
-
 export default App;

@@ -5,10 +5,19 @@
   padding-bottom: 24px;
 }
 .error {
-  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
   font-weight: 500;
   text-align: center;
-  color: #0b07ca;
+  color: #393b42;
+
+}
+
+.defaultImage {
+  width: 100%;
+  margin: 0 auto;
+  top: 40px;
 }
 
 /* .App {
