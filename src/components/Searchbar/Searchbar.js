@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import s from './Searchbar.module.css';
-// import { BiSearchAlt2 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,13 +8,13 @@ class Searchbar extends Component {
     searchQuery: '',
   };
 
-  onChangeInput = e => {
+  handleSearchChange = e => {
     this.setState({
       searchQuery: e.currentTarget.value.toLowerCase(),
     });
   };
 
-  onSubmit = e => {
+  handleSearchSubmit = e => {
     e.preventDefault();
     if (this.state.searchQuery.trim() === '') {
       toast.info('Enter your request', {
@@ -23,7 +22,7 @@ class Searchbar extends Component {
       });
       return;
     }
-    this.props.onSubmit(this.state.searchQuery);
+    this.props.onSubmitForm(this.state.searchQuery);
     this.setState({ searchQuery: '' });
   };
 
@@ -31,10 +30,12 @@ class Searchbar extends Component {
     return (
       <>
         <header className={s.searchbar}>
-          <form className={s.form} onSubmit={this.onSubmit}>
-            <button type="submit" className={s.button} onClick={this.onSubmit}>
-              {/* <span className={s.label}>Search</span> */}
-            </button>
+          <form className={s.form} onSubmit={this.handleSearchSubmit}>
+            <button
+              type="submit"
+              className={s.button}
+              onClick={this.handleSearchSubmit}
+            ></button>
 
             <input
               className={s.input}
@@ -43,7 +44,7 @@ class Searchbar extends Component {
               autoFocus
               placeholder="Search images and photos"
               value={this.state.searchQuery}
-              onChange={this.onChangeInput}
+              onChange={this.handleSearchChange}
             />
           </form>
         </header>
