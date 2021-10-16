@@ -30,7 +30,6 @@ class App extends Component {
     const nextPage = this.state.page;
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
-      // this.setState({ status: 'pending' });
       this.setState({ isLoading: true });
 
       imagesAPI
@@ -56,7 +55,7 @@ class App extends Component {
   }
 
   // Сабмит формы и очистка
-  handleFormSubmit = searchQuery => {
+  getSearchValue = searchQuery => {
     this.setState({ searchQuery, images: [], page: 1, error: null });
   };
 
@@ -100,7 +99,7 @@ class App extends Component {
     return (
       <Container>
         <div className={s.App}>
-          <Searchbar onSubmit={this.handleFormSubmit} />
+          <Searchbar onSubmitForm={this.getSearchValue} />
           {isLoading && <LoaderSpinner />}
           {images.length > 0 && !error && (
             <>
